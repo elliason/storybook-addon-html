@@ -35,6 +35,8 @@ const HTMLPanel = () => {
   });
   useEffect(() => {
     setCode(prettierFormat(html, prettierConfig));
+    const event = new Event('html-plugin-code-received');
+    document.dispatchEvent(event);
   }, [html]);
   return (
     <SyntaxHighlighter
