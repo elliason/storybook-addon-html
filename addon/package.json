@@ -1,5 +1,5 @@
 {
-  "name": "@whitespace/storybook-addon-html",
+  "name": "@elliason/storybook-addon-html",
   "version": "5.0.0",
   "description": "A Storybook addon that extracts and displays compiled syntax-highlighted HTML",
   "main": "out/preset.js",
