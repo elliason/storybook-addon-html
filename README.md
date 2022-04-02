@@ -1,3 +1,21 @@
+# Storybook Addon HTML Adjustments
+
+**This fork is adjusted version of https://github.com/whitespace-se/storybook-addon-html**
+
+**If you are not sure which version you should use, always use the original one.**
+
+The reason for this fork was ability to dispatch custom Event `html-plugin-code-received` after rendered HTML code is updated.
+
+```javascript
+    ...
+    useEffect(() => {
+        setCode(prettierFormat(html, prettierConfig));
+        const event = new Event('html-plugin-code-received');
+        document.dispatchEvent(event);
+    }, [html]);
+    ...
+```
+
 # Storybook Addon HTML
 
 This addon for Storybook adds a tab that displays the compiled HTML for each
