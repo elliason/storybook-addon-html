@@ -14,6 +14,8 @@ const HTMLPanel = () => {
   const [html, setHTML] = useState('');
   const [code, setCode] = useState('');
 
+  const storyIframe = document.getElementById('storybook-preview-iframe');
+
   const parameters = useParameter(PARAM_KEY, {});
   const {
     highlighter: { showLineNumbers = false, wrapLines = true } = {},
@@ -35,8 +37,12 @@ const HTMLPanel = () => {
   });
   useEffect(() => {
     setCode(prettierFormat(html, prettierConfig));
-    const event = new Event('html-plugin-code-received');
-    document.dispatchEvent(event);
+    if (html) {
+      storyIframe.contentWindow.postMessage(
+          'html-plugin-code-received',
+          '*',
+      );
+    }
   }, [html]);
   return (
     <SyntaxHighlighter

@@ -4,7 +4,7 @@
 
 **If you are not sure which version you should use, always use the original one.**
 
-The reason for this fork was ability to dispatch custom Event `html-plugin-code-received` after rendered HTML code is updated.
+The reason for this fork was ability to dispatch message `html-plugin-code-received` to story's iframe, after rendered HTML code is updated.
 
 ```javascript
     ...
