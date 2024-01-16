@@ -1,21 +1,3 @@
-# Storybook Addon HTML Adjustments
-
-**This fork is adjusted version of https://github.com/whitespace-se/storybook-addon-html**
-
-**If you are not sure which version you should use, always use the original one.**
-
-The reason for this fork was ability to dispatch message `html-plugin-code-received` to story's iframe, after rendered HTML code is updated.
-
-```javascript
-    ...
-    useEffect(() => {
-        setCode(prettierFormat(html, prettierConfig));
-        const event = new Event('html-plugin-code-received');
-        document.dispatchEvent(event);
-    }, [html]);
-    ...
-```
-
 # Storybook Addon HTML
 
 This addon for Storybook adds a tab that displays the compiled HTML for each
@@ -25,16 +7,18 @@ story. It uses [highlight.js](https://highlightjs.org/) for syntax highlighting.
 
 ## Getting Started
 
+Install the addon and its dependencies.
+
 With NPM:
 
 ```sh
-npm i --save-dev @elliason/storybook-addon-html
+npm i --save-dev @whitespace/storybook-addon-html prettier react-syntax-highlighter
 ```
 
 With Yarn:
 
 ```sh
-yarn add -D @elliason/storybook-addon-html
+yarn add -D @whitespace/storybook-addon-html prettier react-syntax-highlighter
 ```
 
 ### Register addon
@@ -45,7 +29,7 @@ yarn add -D @elliason/storybook-addon-html
 module.exports = {
   // ...
   addons: [
-    '@elliason/storybook-addon-html',
+    "@whitespace/storybook-addon-html",
     // ...
   ],
 };
@@ -67,7 +51,7 @@ export const parameters = {
     prettier: {
       tabWidth: 4,
       useTabs: false,
-      htmlWhitespaceSensitivity: 'strict',
+      htmlWhitespaceSensitivity: "strict",
     },
   },
 };
@@ -78,13 +62,26 @@ You can override the wrapper element selector used to grab the component HTML.
 ```js
 export const parameters = {
   html: {
-    root: '#my-custom-wrapper', // default: #root
+    root: "#my-custom-wrapper", // default: #root
   },
 };
 ```
 
-When using Web Components, the HTML will contain empty comments, i.e. `<!---->`.
-If you want to remove these, use the `removeEmptyComments` parameter:
+Some frameworks put comments inside the HTML. If you want to remove these you
+can use the `removeComments` parameter. Set it to `true` to remove all comments
+or set it to a regular expression that matches the content of the comments you
+want to remove.
+
+```js
+export const parameters = {
+  html: {
+    removeComments: /^\s*remove me\s*$/, // default: false
+  },
+};
+```
+
+You can also use the `removeEmptyComments` parameter to remove only empty
+comments like `<!---->` and `<!-- -->`.
 
 ```js
 export const parameters = {
@@ -108,6 +105,15 @@ export const parameters = {
 };
 ```
 
-## Supported frameworks
+Another way of hiding unwanted code is to define the `transform` option. It
+allows you to perform any change to the output code, e.g. removing attributes
+injected by frameworks.
 
-As of version 4.0.0 all frameworks are supported per default 🎉
+```js
+html: {
+  transform: (code) => {
+    // Remove attributes `_nghost` and `ng-reflect` injected by Angular:
+    return code.replace(/(?:_nghost|ng-reflect).*?="[\S\s]*?"/g, "");
+  };
+}
+```
