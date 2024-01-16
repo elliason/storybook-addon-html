@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect } from "react";
 import { useAddonState, useChannel, useParameter } from "@storybook/api";
 import { AddonPanel } from "@storybook/components";
 import { ADDON_ID, EVENTS, PARAM_KEY } from "./constants";
@@ -36,6 +36,20 @@ export const Panel = (props) => {
     () => code && prettierFormat(code, prettierConfig),
     [code, prettierConfig],
   );
+
+  /**
+   * Media Factory custom code
+   * post message to iframe to trigger the JS Handler in VF storybook
+   */
+  useEffect(() => {
+    if (!formattedCode) {
+      return;
+    }
+
+    const storyIframe = document.getElementById("storybook-preview-iframe");
+
+    storyIframe.contentWindow.postMessage("html-plugin-code-received", "*");
+  }, [formattedCode]);
 
   return (
     <AddonPanel {...props}>
